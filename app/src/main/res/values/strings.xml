@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">JustDrink</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="tab_text_1">Kort</string>
+    <string name="tab_text_2">Profil</string>
+    <string name="tab_text_3">Chat</string>
 </resources>

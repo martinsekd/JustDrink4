@@ -1,8 +1,8 @@
 package dk.au.mad21fall.appproject.justdrink.Model;
 
 public class DrinkItems {
-    String name;
-    String description;
-    double price;
-    String image;
+    public String name;
+    public String description;
+    public double price;
+    public String image;
 }
