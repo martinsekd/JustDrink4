@@ -29,8 +29,8 @@ class Repository {
         mStorage = FirebaseStorage.getInstance();
     }
 
-    //Making repository
-    public Repository(Application application){
-
+    //Making repository Detailed bar view
+    //public Repository(Application application){
+        //FirebaseDatabase database = FirebaseDatabase.getInstance(String.valueOf(application));
     }
-}
+
