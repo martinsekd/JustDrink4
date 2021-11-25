@@ -18,6 +18,7 @@ public class DetailedViewFragment extends Fragment {
 
     private DetailedViewViewModel mViewModel;
 
+
     public static DetailedViewFragment newInstance() {
         return new DetailedViewFragment();
     }
