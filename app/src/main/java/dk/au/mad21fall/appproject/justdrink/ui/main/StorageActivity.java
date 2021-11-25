@@ -1,5 +1,6 @@
 package dk.au.mad21fall.appproject.justdrink.ui.main;
 
+import android.net.Uri;
 import android.os.Bundle;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -17,8 +18,15 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class StorageActivity extends AppCompatActivity {
     private final String TAG = "java.StorageActivity";
@@ -80,4 +88,88 @@ public class StorageActivity extends AppCompatActivity {
 
 
     }
+
+    public void includeForDownloadFiles() throws IOException {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        //START Download
+
+        StorageReference storageRef = storage.getReference();
+
+        StorageReference pathReference = storageRef.child("images/stars.jpg");
+
+        StorageReference gsReference = storage.getReferenceFromUrl("gs://bucket/images/stars.jpg");
+
+
+        StorageReference httpsReference = storage.getReferenceFromUrl("https://firebasestorage.googleapis.com/b/bucket/o/images%20stars.jpg");
+
+        //End Download ref
+
+
+        //START download to memory
+
+        StorageReference islandRef = storageRef.child("images/island.jpg");
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Data for "images/island.jpg" is returns, use this as needed
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+
+        //END download to memory
+
+        // [START download_to_local_file]
+        islandRef = storageRef.child("images/island.jpg");
+
+        File localFile = File.createTempFile("images", "jpg");
+
+        islandRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // Local temp file has been created
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+        // [END download_to_local_file]
+
+        // [START download_via_url]
+        storageRef.child("users/me/profile.png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+        // [END download_via_url]
+
+        // [START download_full_example]
+        storageRef.child("users/me/profile.png").getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Use the bytes to display the image
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+        // [END download_full_example]
+    }
 }
+
