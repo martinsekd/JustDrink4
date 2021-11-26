@@ -11,10 +11,20 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import dk.au.mad21fall.appproject.justdrink.R;
 
 public class DetailedViewFragment extends Fragment {
+
+    //Widgets
+    private ImageView Image_Bar;
+    private TextView Bar_name;
+    private TextView Bar_OpenHours;
+    private TextView Bar_Contacts;
+
+
 
     private DetailedViewViewModel mViewModel;
 
@@ -27,6 +37,8 @@ public class DetailedViewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.detailed_view_fragment, container, false);
+
+
     }
 
     @Override
@@ -34,6 +46,7 @@ public class DetailedViewFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(DetailedViewViewModel.class);
         // TODO: Use the ViewModel
+
     }
 
 }
