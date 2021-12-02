@@ -30,6 +30,7 @@ public class DetailedViewFragment extends Fragment {
     private TextView Bar_OpenHours;
     private TextView Bar_Contacts;
     private TextView Bar_Adresse;
+    private TextView Bar_Rating;
 
 
     public static DetailedViewFragment newInstance() {
@@ -46,6 +47,7 @@ public class DetailedViewFragment extends Fragment {
         Bar_OpenHours = v.findViewById(R.id.Bar_OpenHours);
         Bar_Contacts = v.findViewById(R.id.Bar_Contacts);
         Bar_Adresse = v.findViewById(R.id.Bar_Adresse);
+        Bar_Rating = v.findViewById(R.id.Bar_Rating);
 
 
         mDetailedView.mLocation.observe(getViewLifecycleOwner(), new Observer<Location>() {
@@ -53,15 +55,16 @@ public class DetailedViewFragment extends Fragment {
             public void onChanged(Location location) {
                 Bar_name.setText(mLocation.name);
                 Bar_Contacts.setText(mLocation.phoneNumer);
+                Bar_Adresse.setText(mLocation.address);
+                Bar_Rating.setText("");
+
 
 
             }
         });
-
-
-
-
     }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
