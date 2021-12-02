@@ -1,5 +1,7 @@
 package dk.au.mad21fall.appproject.justdrink.ui.main;
 
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -14,19 +16,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import dk.au.mad21fall.appproject.justdrink.Model.Location;
+import dk.au.mad21fall.appproject.justdrink.Model.OpenHours;
 import dk.au.mad21fall.appproject.justdrink.R;
 
 public class DetailedViewFragment extends Fragment {
 
+    private DetailedViewViewModel mDetailedView;
+    private Location mLocation;
     //Widgets
     private ImageView Image_Bar;
     private TextView Bar_name;
     private TextView Bar_OpenHours;
     private TextView Bar_Contacts;
-
-
-
-    private DetailedViewViewModel mViewModel;
+    private TextView Bar_Adresse;
 
 
     public static DetailedViewFragment newInstance() {
@@ -36,7 +39,26 @@ public class DetailedViewFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.detailed_view_fragment, container, false);
+        mDetailedView = new ViewModelProvider(this).get(DetailedViewViewModel.class);
+        View v = inflater.inflate(R.layout.detailed_view_fragment, container, false);
+        Image_Bar = v.findViewById(R.id.Image_Bar);
+        Bar_name = v.findViewById(R.id.Bar_Name);
+        Bar_OpenHours = v.findViewById(R.id.Bar_OpenHours);
+        Bar_Contacts = v.findViewById(R.id.Bar_Contacts);
+        Bar_Adresse = v.findViewById(R.id.Bar_Adresse);
+
+
+        mDetailedView.mLocation.observe(getViewLifecycleOwner(), new Observer<Location>() {
+            @Override
+            public void onChanged(Location location) {
+                Bar_name.setText(mLocation.name);
+                Bar_Contacts.setText(mLocation.phoneNumer);
+
+
+            }
+        });
+
+
 
 
     }
@@ -44,7 +66,7 @@ public class DetailedViewFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(DetailedViewViewModel.class);
+        mDetailedView = new ViewModelProvider(this).get(DetailedViewViewModel.class);
         // TODO: Use the ViewModel
 
     }
