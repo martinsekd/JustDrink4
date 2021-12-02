@@ -1,4 +1,4 @@
-package dk.au.mad21fall.appproject.justdrink.ui.main;
+package dk.au.mad21fall.appproject.justdrink.View;
 
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
@@ -19,6 +19,7 @@ import android.widget.TextView;
 import dk.au.mad21fall.appproject.justdrink.Model.Location;
 import dk.au.mad21fall.appproject.justdrink.Model.OpenHours;
 import dk.au.mad21fall.appproject.justdrink.R;
+import dk.au.mad21fall.appproject.justdrink.ViewModel.DetailedViewViewModel;
 
 public class DetailedViewFragment extends Fragment {
 
@@ -62,6 +63,8 @@ public class DetailedViewFragment extends Fragment {
 
             }
         });
+
+        return v;
     }
 
 
