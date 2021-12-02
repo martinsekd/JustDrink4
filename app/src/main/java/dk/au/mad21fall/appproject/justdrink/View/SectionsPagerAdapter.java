@@ -1,4 +1,4 @@
-package dk.au.mad21fall.appproject.justdrink.ui.main;
+package dk.au.mad21fall.appproject.justdrink.View;
 
 import android.content.Context;
 
@@ -7,9 +7,10 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import dk.au.mad21fall.appproject.justdrink.MapsActivity;
+import dk.au.mad21fall.appproject.justdrink.View.ChatFragment;
 import dk.au.mad21fall.appproject.justdrink.R;
-import dk.au.mad21fall.appproject.justdrink.ui.MapFragment;
+import dk.au.mad21fall.appproject.justdrink.View.MapFragment;
+import dk.au.mad21fall.appproject.justdrink.View.ProfileFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -36,7 +37,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return new ProfileFragment();
             case 2:
-                return new MapFragment();
+                return new ChatFragment();
             default:
                 return new MapFragment();
         }

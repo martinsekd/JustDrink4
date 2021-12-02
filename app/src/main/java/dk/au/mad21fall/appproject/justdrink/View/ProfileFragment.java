@@ -1,4 +1,4 @@
-package dk.au.mad21fall.appproject.justdrink.ui.main;
+package dk.au.mad21fall.appproject.justdrink.View;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -17,9 +17,9 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import dk.au.mad21fall.appproject.justdrink.Model.Gender;
 import dk.au.mad21fall.appproject.justdrink.Model.ProfileSettings;
 import dk.au.mad21fall.appproject.justdrink.R;
+import dk.au.mad21fall.appproject.justdrink.ViewModel.ProfileViewModel;
 
 import static dk.au.mad21fall.appproject.justdrink.Model.Gender.FEMALE;
 import static dk.au.mad21fall.appproject.justdrink.Model.Gender.MALE;

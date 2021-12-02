@@ -1,4 +1,4 @@
-package dk.au.mad21fall.appproject.justdrink.ui.main;
+package dk.au.mad21fall.appproject.justdrink.View;
 
 import android.os.Bundle;
 import com.google.android.gms.tasks.Continuation;
