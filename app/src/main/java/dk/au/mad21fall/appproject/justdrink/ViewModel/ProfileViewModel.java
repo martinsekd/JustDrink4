@@ -1,4 +1,4 @@
-package dk.au.mad21fall.appproject.justdrink.ui.main;
+package dk.au.mad21fall.appproject.justdrink.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -25,29 +25,7 @@ public class ProfileViewModel extends ViewModel {
         mAuth = FirebaseAuth.getInstance();
         mProfile = new MutableLiveData<ProfileSettings>();
 
-        String userKey = mAuth.getCurrentUser().getUid();
-        myRef = FirebaseDatabase.getInstance().getReference("Users/"+userKey);
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
-                    mProfile.setValue(snapshot.getValue(ProfileSettings.class));
-                } else {
-                    ProfileSettings profile1 = new ProfileSettings();
-                    profile1.firstName = "";
-                    profile1.age = 0;
-                    profile1.gender = Gender.OTHER;
-                    myRef.setValue(profile1);
-                    mProfile.setValue(profile1);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
     public void updateSettings(ProfileSettings settings) {

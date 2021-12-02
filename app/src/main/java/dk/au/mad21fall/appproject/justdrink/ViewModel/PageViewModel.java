@@ -1,4 +1,4 @@
-package dk.au.mad21fall.appproject.justdrink.ui.main;
+package dk.au.mad21fall.appproject.justdrink.ViewModel;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;

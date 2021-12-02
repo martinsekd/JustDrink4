@@ -1,4 +1,4 @@
-package dk.au.mad21fall.appproject.justdrink.ui.main;
+package dk.au.mad21fall.appproject.justdrink.View;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import dk.au.mad21fall.appproject.justdrink.R;
+import dk.au.mad21fall.appproject.justdrink.ViewModel.PageViewModel;
 import dk.au.mad21fall.appproject.justdrink.databinding.FragmentMainBinding;
 
 /**
