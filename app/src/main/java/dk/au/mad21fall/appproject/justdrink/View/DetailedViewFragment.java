@@ -1,6 +1,5 @@
 package dk.au.mad21fall.appproject.justdrink.View;
 
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -16,8 +15,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.EnumSet;
+
+import dk.au.mad21fall.appproject.justdrink.Model.Day;
 import dk.au.mad21fall.appproject.justdrink.Model.Location;
-import dk.au.mad21fall.appproject.justdrink.Model.OpenHours;
 import dk.au.mad21fall.appproject.justdrink.R;
 import dk.au.mad21fall.appproject.justdrink.ViewModel.DetailedViewViewModel;
 
@@ -32,6 +36,10 @@ public class DetailedViewFragment extends Fragment {
     private TextView Bar_Contacts;
     private TextView Bar_Adresse;
     private TextView Bar_Rating;
+
+
+
+
 
 
     public static DetailedViewFragment newInstance() {
@@ -51,14 +59,18 @@ public class DetailedViewFragment extends Fragment {
         Bar_Rating = v.findViewById(R.id.Bar_Rating);
 
 
+
+
+
+
+        //InfoWindow onChanged override.
         mDetailedView.mLocation.observe(getViewLifecycleOwner(), new Observer<Location>() {
             @Override
             public void onChanged(Location location) {
                 Bar_name.setText(mLocation.name);
                 Bar_Contacts.setText(mLocation.phoneNumer);
                 Bar_Adresse.setText(mLocation.address);
-                Bar_Rating.setText("");
-
+                Bar_Rating.setText(mLocation.rating+"");
 
 
             }
@@ -74,6 +86,39 @@ public class DetailedViewFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mDetailedView = new ViewModelProvider(this).get(DetailedViewViewModel.class);
         // TODO: Use the ViewModel
+
+        //Switch case
+        int day = 7;
+        switch (day){
+            case 0:
+                Bar_OpenHours.setText("Monday    16:00 - 05:00");
+                break;
+
+            case 1:
+                Bar_OpenHours.setText("Tuesday   16:00 - 05:00");
+                break;
+
+            case 2:
+                Bar_OpenHours.setText("Wednesday   16:00 - 05:00");
+                break;
+
+            case 3:
+                Bar_OpenHours.setText("Thursday   16:00 - 05:00");
+                break;
+
+            case 4:
+                Bar_OpenHours.setText("Friday   16:00 - 05:00");
+                break;
+
+            case 5:
+                Bar_OpenHours.setText("Saturday   16:00 - 05:00");
+                break;
+
+            case 6:
+                Bar_OpenHours.setText("Sunday  16:00 - 05:00");
+                break;
+
+        }
 
     }
 
