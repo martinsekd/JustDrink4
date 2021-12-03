@@ -2,31 +2,24 @@ package dk.au.mad21fall.appproject.justdrink.View;
 
 import android.net.Uri;
 import android.os.Bundle;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
-import com.google.firebase.storage.OnPausedListener;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageException;
-import com.google.firebase.storage.StorageMetadata;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.File;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.BitSet;
+import java.io.ByteArrayOutputStream;
 
 public class StorageActivity extends AppCompatActivity {
     private final String TAG = "java.StorageActivity";
@@ -69,12 +62,11 @@ public class StorageActivity extends AppCompatActivity {
         //nullRef is null, since the parent of root is null
         StorageReference nullRef = spaceRef.getRoot().getParent();
 
-
         spaceRef.getPath();
 
         spaceRef.getName();
 
-        spaceRef.getBucket();
+
 
         //Points to "Images/space.png"
         String fileName = "";
@@ -89,6 +81,57 @@ public class StorageActivity extends AppCompatActivity {
 
     }
 
+    public void includeForUploadFiles() throws FileNotFoundException{
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        //Start upload
+        StorageReference storageRef = storage.getReference();
+
+        //Create reference to the image Heidis_Icon
+        StorageReference MountainRef = storageRef.child("Heidis_Icon.png");
+
+        //Create reference to images/Heidis_Icon.png
+        StorageReference MountainsImagesRef = storageRef.child("images/Heidis_Icon.png");
+
+        MountainRef.getName().equals(MountainsImagesRef.getName());    // true
+        MountainRef.getPath().equals(MountainsImagesRef.getPath());    // false
+
+
+        //Upload memory
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] data = baos.toByteArray();
+        UploadTask uploadTask = MountainsImagesRef.putBytes(data);
+
+        //Upload local file
+        Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
+        StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
+        uploadTask = riversRef.putFile(file);
+
+
+        //Register if the upload failed or succeded
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //handle unsuccessfull uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                //Handle successfull uploads
+            }
+        });
+
+        //Start upload builder
+        // [START upload_with_metadata]
+        // Create file metadata including the content type
+        StorageMetadata metadata = new StorageMetadata.Builder()
+                .setContentType("image/jpg")
+                .build();
+
+
+
+    }
+
     public void includeForDownloadFiles() throws IOException {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -96,12 +139,13 @@ public class StorageActivity extends AppCompatActivity {
 
         StorageReference storageRef = storage.getReference();
 
-        StorageReference pathReference = storageRef.child("images/stars.jpg");
+        StorageReference pathReference = storageRef.child("Heidis_Icon.png");
 
-        StorageReference gsReference = storage.getReferenceFromUrl("gs://bucket/images/stars.jpg");
+        //GS URL
+        StorageReference gsReference = storage.getReferenceFromUrl("gs://drinks4-f5043.appspot.com/Heidis_Icon.png");
 
-
-        StorageReference httpsReference = storage.getReferenceFromUrl("https://firebasestorage.googleapis.com/b/bucket/o/images%20stars.jpg");
+        //HTTP:// URL
+        StorageReference httpsReference = storage.getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/drinks4-f5043.appspot.com/o/Heidis_Icon.png");
 
         //End Download ref
 
@@ -170,6 +214,11 @@ public class StorageActivity extends AppCompatActivity {
             }
         });
         // [END download_full_example]
+
+
     }
+
+
+
 }
 

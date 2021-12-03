@@ -25,6 +25,10 @@ import dk.au.mad21fall.appproject.justdrink.Model.Location;
 import dk.au.mad21fall.appproject.justdrink.R;
 import dk.au.mad21fall.appproject.justdrink.ViewModel.DetailedViewViewModel;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.model.Marker;
+
 public class DetailedViewFragment extends Fragment {
 
     private DetailedViewViewModel mDetailedView;
@@ -36,8 +40,8 @@ public class DetailedViewFragment extends Fragment {
     private TextView Bar_Contacts;
     private TextView Bar_Adresse;
     private TextView Bar_Rating;
-
-
+    GoogleMap GoogleMap;
+    Marker marker_1;
 
 
 
@@ -46,6 +50,7 @@ public class DetailedViewFragment extends Fragment {
         return new DetailedViewFragment();
     }
 
+    //Set widgets
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -57,8 +62,6 @@ public class DetailedViewFragment extends Fragment {
         Bar_Contacts = v.findViewById(R.id.Bar_Contacts);
         Bar_Adresse = v.findViewById(R.id.Bar_Adresse);
         Bar_Rating = v.findViewById(R.id.Bar_Rating);
-
-
 
 
 
@@ -81,11 +84,16 @@ public class DetailedViewFragment extends Fragment {
 
 
 
+
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mDetailedView = new ViewModelProvider(this).get(DetailedViewViewModel.class);
         // TODO: Use the ViewModel
+
+
 
         //Switch case
         int day = 7;
