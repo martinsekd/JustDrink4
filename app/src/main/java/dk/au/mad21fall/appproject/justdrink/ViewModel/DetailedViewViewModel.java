@@ -19,4 +19,7 @@ public class DetailedViewViewModel extends ViewModel {
 
 
 
+
+
+
 }
