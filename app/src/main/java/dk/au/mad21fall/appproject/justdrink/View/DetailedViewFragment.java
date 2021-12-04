@@ -64,8 +64,6 @@ public class DetailedViewFragment extends Fragment {
         Bar_Rating = v.findViewById(R.id.Bar_Rating);
 
 
-
-
         //InfoWindow onChanged override.
         mDetailedView.mLocation.observe(getViewLifecycleOwner(), new Observer<Location>() {
             @Override
@@ -74,26 +72,15 @@ public class DetailedViewFragment extends Fragment {
                 Bar_Contacts.setText(mLocation.phoneNumer);
                 Bar_Adresse.setText(mLocation.address);
                 Bar_Rating.setText(mLocation.rating+"");
-
-
             }
         });
-
-        return v;
-    }
-
-
-
-
-
+        return v; }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mDetailedView = new ViewModelProvider(this).get(DetailedViewViewModel.class);
         // TODO: Use the ViewModel
-
-
 
         //Switch case
         int day = 7;
@@ -126,8 +113,5 @@ public class DetailedViewFragment extends Fragment {
                 Bar_OpenHours.setText("Sunday  16:00 - 05:00");
                 break;
 
-        }
-
-    }
-
+        }}
 }
