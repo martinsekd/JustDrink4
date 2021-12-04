@@ -35,8 +35,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.model.Marker;
 
-public class DetailedViewFragment extends Fragment implements OnMarkerClickListener {
+public class DetailedViewFragment extends Fragment  {//implements OnMarkerClickListener
 
+    //InfoWindow detailed view
     private DetailedViewViewModel mDetailedView;
     private Location mLocation;
     //Widgets
@@ -121,31 +122,31 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
 
         }}
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        if (marker.equals(mAarhus)) {
-            //Causes the marker to jump into position when clicked
-            final Handler handler = new Handler();
-            final long start = SystemClock.uptimeMillis();
-            final long duration = 1500;
+    //@Override
+    //public boolean onMarkerClick(Marker marker) {
+      //  if (marker.equals(mAarhus)) {
+    //      //Causes the marker to jump into position when clicked
+    //      final Handler handler = new Handler();
+    //      final long start = SystemClock.uptimeMillis();
+    //      final long duration = 1500;
+//
+    //          final Interpolator interpolator = new BounceInterpolator();
+    //      handler.post(new Runnable() {
+    //          @Override
+    //          public void run() {
+    //              long elapsed = SystemClock.uptimeMillis() - start;
+    //              float t = Math.max(
+    //                      1 - interpolator.getInterpolation((float) elapsed / duration), 0);
+    //              marker.setAnchor(0.5f, 1.0f + 2 * t);
+//
+    //                  if (t > 0.0) {
+    //                  // Post again 16ms later.
+    //                  handler.postDelayed(this, 16);
+    //              }
+    //          }
+    //      });
+    //  }
 
-            final Interpolator interpolator = new BounceInterpolator();
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    long elapsed = SystemClock.uptimeMillis() - start;
-                    float t = Math.max(
-                            1 - interpolator.getInterpolation((float) elapsed / duration), 0);
-                    marker.setAnchor(0.5f, 1.0f + 2 * t);
-
-                    if (t > 0.0) {
-                        // Post again 16ms later.
-                        handler.postDelayed(this, 16);
-                    }
-                }
-            });
-        }
-
-        return false;
-    }
+    //  return false;
+    //}
 }
