@@ -25,7 +25,9 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.List;
 
+import dk.au.mad21fall.appproject.justdrink.HelperClasses.JustDrinkViewModelFactory;
 import dk.au.mad21fall.appproject.justdrink.Model.Day;
 import dk.au.mad21fall.appproject.justdrink.Model.Location;
 import dk.au.mad21fall.appproject.justdrink.R;
@@ -38,7 +40,7 @@ import com.google.android.gms.maps.model.Marker;
 public class DetailedViewFragment extends Fragment  {//implements OnMarkerClickListener
 
     //InfoWindow detailed view
-    private DetailedViewViewModel mDetailedView;
+    private DetailedViewViewModel vm;
     private Location mLocation;
     //Widgets
     private ImageView Image_Bar;
@@ -61,7 +63,8 @@ public class DetailedViewFragment extends Fragment  {//implements OnMarkerClickL
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mDetailedView = new ViewModelProvider(this).get(DetailedViewViewModel.class);
+        vm = new JustDrinkViewModelFactory(getContext()).create(DetailedViewViewModel.class);
+        //mDetailedView = new ViewModelProvider(this).get(DetailedViewViewModel.class);
         View v = inflater.inflate(R.layout.detailed_view_fragment, container, false);
         Image_Bar = v.findViewById(R.id.Image_Bar);
         Bar_name = v.findViewById(R.id.Bar_Name);
@@ -72,13 +75,15 @@ public class DetailedViewFragment extends Fragment  {//implements OnMarkerClickL
 
 
         //InfoWindow onChanged override.
-        mDetailedView.mLocation.observe(getViewLifecycleOwner(), new Observer<Location>() {
+        vm.mLocation.observe(getViewLifecycleOwner(), new Observer<Location>() {
             @Override
             public void onChanged(Location location) {
                 Bar_name.setText(mLocation.name);
                 Bar_Contacts.setText(mLocation.phoneNumer);
                 Bar_Adresse.setText(mLocation.address);
                 Bar_Rating.setText(mLocation.rating+"");
+
+                List<Day> openhours = location.openhours;
             }
         });
         return v; }
@@ -86,7 +91,8 @@ public class DetailedViewFragment extends Fragment  {//implements OnMarkerClickL
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mDetailedView = new ViewModelProvider(this).get(DetailedViewViewModel.class);
+
+        //mDetailedView = new ViewModelProvider(this).get(DetailedViewViewModel.class);
         // TODO: Use the ViewModel
 
         //Switch case
