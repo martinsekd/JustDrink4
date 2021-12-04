@@ -16,6 +16,10 @@ public class ChatFragmentViewModel extends ViewModel {
     public void setContext(Context context) {
         mContext = context;
     }
+
+    public ChatFragmentViewModel(Context context) {
+        mContext = context;
+    }
     public LiveData<String> getUUID() {
         return Repository.getInstance(mContext).getUUID(mContext);
     }

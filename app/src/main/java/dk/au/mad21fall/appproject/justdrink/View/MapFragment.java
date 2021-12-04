@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,8 +38,10 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import dk.au.mad21fall.appproject.justdrink.HelperClasses.JustDrinkViewModelFactory;
 import dk.au.mad21fall.appproject.justdrink.Model.Location;
 import dk.au.mad21fall.appproject.justdrink.R;
+import dk.au.mad21fall.appproject.justdrink.ViewModel.MapFragmentViewModel;
 import dk.au.mad21fall.appproject.justdrink.databinding.ActivityMapsBinding;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback{
@@ -48,6 +52,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private View view;
+
+    private MapFragmentViewModel vm;
 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -101,12 +107,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             }
         });
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(aarhus,15.0f));
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Toast.makeText(getContext(),"Du har trykket på "+marker.getTitle(),Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_maps, container, false);
+        vm = new JustDrinkViewModelFactory(getContext()).create(MapFragmentViewModel.class);
 
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

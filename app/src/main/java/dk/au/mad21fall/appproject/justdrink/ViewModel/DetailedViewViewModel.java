@@ -1,5 +1,7 @@
 package dk.au.mad21fall.appproject.justdrink.ViewModel;
 
+import android.content.Context;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -13,6 +15,12 @@ public class DetailedViewViewModel extends ViewModel {
     // TODO: Implement the ViewModel
 
     public MutableLiveData<Location> mLocation;
+    private Context mContext;
+
+    public DetailedViewViewModel(Context context) {
+        mContext = context;
+    }
+
 
 
 

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.GnssAntennaInfo;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -83,10 +84,23 @@ public class Repository {
                     @Override
                     public void onResponse(List<Location> response) {
 
-                        for (Location loc:response) {
+                        for (Location loc : response) {
                             String barId = mDatabase.getReference().push().getKey();
-                            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Places/"+barId);
-                            myRef.setValue(loc);
+                            DatabaseReference myORef = FirebaseDatabase.getInstance().getReference("Places/");
+                            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Places/" + barId);
+                            myORef.orderByChild("name").equalTo(loc.name).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (!snapshot.exists()) {
+                                        myRef.setValue(loc);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
                     }
                 });
@@ -106,7 +120,7 @@ public class Repository {
     public LiveData<String> getUUID(Context context) {
         MutableLiveData<String> liveData = new MutableLiveData<String>();
 
-        if(uuid == null) {
+        if (uuid == null) {
             mAuth.signInAnonymously()
                     .addOnCompleteListener(executor, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -128,7 +142,21 @@ public class Repository {
         return liveData;
     }
 
+    public void getDistanceFromPlace(double lat, double lng,Response.Listener<Float> listener) {
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Task<android.location.Location> loc = placeProvider.mfusedClient.getLastLocation();
+        loc.addOnSuccessListener(executor, new OnSuccessListener<android.location.Location>() {
+            @Override
+            public void onSuccess(android.location.Location location) {
+                float distance[] = new float[2];
+                android.location.Location.distanceBetween(location.getLatitude(),location.getLongitude(),lat,lng,distance);
+                listener.onResponse(distance[0]);
 
+            }
+        });
+    }
     public void asd() {
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("");
         myRef.addValueEventListener(new ValueEventListener() {

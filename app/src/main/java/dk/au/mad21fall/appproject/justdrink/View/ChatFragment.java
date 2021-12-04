@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import dk.au.mad21fall.appproject.justdrink.HelperClasses.JustDrinkViewModelFactory;
 import dk.au.mad21fall.appproject.justdrink.Model.ListLogic.MessageAdapter;
 import dk.au.mad21fall.appproject.justdrink.Model.FirebaseChatMessage;
 import dk.au.mad21fall.appproject.justdrink.Model.MemberData;
@@ -79,7 +80,7 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_chat, container, false);
-        vm = new ViewModelProvider(this).get(ChatFragmentViewModel.class);
+        vm = new JustDrinkViewModelFactory(getContext()).create(ChatFragmentViewModel.class);
         vm.setContext(getContext());
 
         chatView = v.findViewById(R.id.chatList);

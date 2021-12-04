@@ -19,7 +19,7 @@ import dk.au.mad21fall.appproject.justdrink.View.ProfileFragment;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3, R.string.tab_text_4};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -38,21 +38,25 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return new ProfileFragment();
             case 2:
                 return new ChatFragment();
+            case 3:
+                return new ListviewFragment();
             default:
                 return new MapFragment();
         }
         //return PlaceholderFragment.newInstance(position + 1);
     }
 
+
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return mContext.getResources().getString(TAB_TITLES[position]);
+        return "";
+        //return mContext.getResources().getString(TAB_TITLES[position]);
     }
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
-        return 3;
+        // Show 4 total pages.
+        return 4;
     }
 }
