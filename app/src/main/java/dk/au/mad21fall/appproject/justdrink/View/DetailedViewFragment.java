@@ -9,11 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BaseInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
@@ -29,7 +35,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.model.Marker;
 
-public class DetailedViewFragment extends Fragment {
+public class DetailedViewFragment extends Fragment implements OnMarkerClickListener {
 
     private DetailedViewViewModel mDetailedView;
     private Location mLocation;
@@ -41,7 +47,7 @@ public class DetailedViewFragment extends Fragment {
     private TextView Bar_Adresse;
     private TextView Bar_Rating;
     GoogleMap GoogleMap;
-    Marker marker_1;
+    private Marker mAarhus;
 
 
 
@@ -114,4 +120,32 @@ public class DetailedViewFragment extends Fragment {
                 break;
 
         }}
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if (marker.equals(mAarhus)) {
+            //Causes the marker to jump into position when clicked
+            final Handler handler = new Handler();
+            final long start = SystemClock.uptimeMillis();
+            final long duration = 1500;
+
+            final Interpolator interpolator = new BounceInterpolator();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    long elapsed = SystemClock.uptimeMillis() - start;
+                    float t = Math.max(
+                            1 - interpolator.getInterpolation((float) elapsed / duration), 0);
+                    marker.setAnchor(0.5f, 1.0f + 2 * t);
+
+                    if (t > 0.0) {
+                        // Post again 16ms later.
+                        handler.postDelayed(this, 16);
+                    }
+                }
+            });
+        }
+
+        return false;
+    }
 }
