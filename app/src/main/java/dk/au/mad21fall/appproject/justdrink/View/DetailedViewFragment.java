@@ -41,16 +41,15 @@ public class DetailedViewFragment extends Fragment  {//implements OnMarkerClickL
 
     //InfoWindow detailed view
     private DetailedViewViewModel vm;
-    private Location mLocation;
     //Widgets
     private ImageView Image_Bar;
+    private String Bar_ID;
     private TextView Bar_name;
     private TextView Bar_OpenHours;
     private TextView Bar_Contacts;
     private TextView Bar_Adresse;
     private TextView Bar_Rating;
-    GoogleMap GoogleMap;
-    private Marker mAarhus;
+
 
 
 
@@ -77,14 +76,47 @@ public class DetailedViewFragment extends Fragment  {//implements OnMarkerClickL
         //InfoWindow onChanged override.
         vm.mLocation.observe(getViewLifecycleOwner(), new Observer<Location>() {
             @Override
-            public void onChanged(Location location) {
+            public void onChanged(Location mLocation) {
+                Bar_ID.equals(mLocation.id);
                 Bar_name.setText(mLocation.name);
-                Bar_Contacts.setText(mLocation.phoneNumer);
+                Bar_Contacts.setText(mLocation.phoneNumer + "");
                 Bar_Adresse.setText(mLocation.address);
-                Bar_Rating.setText(mLocation.rating+"");
+                Bar_Rating.setText(mLocation.rating + "");
 
-                List<Day> openhours = location.openhours;
-            }
+                List<Day> openhours = mLocation.openhours;
+
+                //Switch case
+                int Day = 7;
+                switch (Day){
+                  case 0:
+                      Bar_OpenHours.setText("Monday    16:00 - 05:00");
+                      break;
+
+                          case 1:
+                      Bar_OpenHours.setText("Tuesday   16:00 - 05:00");
+                      break;
+
+                          case 2:
+                      Bar_OpenHours.setText("Wednesday   16:00 - 05:00");
+                      break;
+
+                          case 3:
+                      Bar_OpenHours.setText("Thursday   16:00 - 05:00");
+                      break;
+
+                         case 4:
+                      Bar_OpenHours.setText("Friday   16:00 - 05:00");
+                      break;
+
+                          case 5:
+                      Bar_OpenHours.setText("Saturday   16:00 - 05:00");
+                      break;
+
+                          case 6:
+                      Bar_OpenHours.setText("Sunday  16:00 - 05:00");
+                      break;
+
+            }}
         });
         return v; }
 
@@ -95,36 +127,6 @@ public class DetailedViewFragment extends Fragment  {//implements OnMarkerClickL
         //mDetailedView = new ViewModelProvider(this).get(DetailedViewViewModel.class);
         // TODO: Use the ViewModel
 
-        //Switch case
-        int day = 7;
-        switch (day){
-            case 0:
-                Bar_OpenHours.setText("Monday    16:00 - 05:00");
-                break;
-
-            case 1:
-                Bar_OpenHours.setText("Tuesday   16:00 - 05:00");
-                break;
-
-            case 2:
-                Bar_OpenHours.setText("Wednesday   16:00 - 05:00");
-                break;
-
-            case 3:
-                Bar_OpenHours.setText("Thursday   16:00 - 05:00");
-                break;
-
-            case 4:
-                Bar_OpenHours.setText("Friday   16:00 - 05:00");
-                break;
-
-            case 5:
-                Bar_OpenHours.setText("Saturday   16:00 - 05:00");
-                break;
-
-            case 6:
-                Bar_OpenHours.setText("Sunday  16:00 - 05:00");
-                break;
 
         }}
 
@@ -155,4 +157,3 @@ public class DetailedViewFragment extends Fragment  {//implements OnMarkerClickL
 
     //  return false;
     //}
-}

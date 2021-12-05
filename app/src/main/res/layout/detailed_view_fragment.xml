@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="600dp"
     tools:context=".ui.main.DetailedViewFragment">
 
 
@@ -16,10 +16,10 @@
         <TextView
             android:id="@+id/Bar_Name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_gravity="center"
             android:layout_weight="0.2"
-            android:text="                                                  Bar navn" />
+            android:text="Bar navn" />
 
         <ImageView
             android:id="@+id/Image_Bar"
@@ -38,24 +38,24 @@
 
         <TextView
             android:id="@+id/Bar_OpenHours"
-            android:layout_width="260dp"
-            android:layout_height="450dp"
+            android:layout_width="270dp"
+            android:layout_height="287dp"
             android:layout_weight="1"
             android:text="Openhours" />
 
         <TextView
             android:id="@+id/Bar_Contacts"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="73dp"
             android:layout_weight="1"
             android:text="Contact" />
 
         <TextView
             android:id="@+id/Bar_Adresse"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_height="65dp"
             android:layout_gravity="center_vertical"
+            android:layout_weight="5"
             android:text="Adresse" />
 
     </LinearLayout>
