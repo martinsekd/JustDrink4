@@ -83,6 +83,7 @@ public class StorageActivity extends AppCompatActivity {
 
     }
 
+    //Upload images to gs://drinks4-f5043.appspot.com
     public void includeForUploadFiles() throws FileNotFoundException{
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -134,6 +135,7 @@ public class StorageActivity extends AppCompatActivity {
 
     }
 
+    //Download pictures from gs://drinks4-f5043.appspot.com
     public void includeForDownloadFiles() throws IOException {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
