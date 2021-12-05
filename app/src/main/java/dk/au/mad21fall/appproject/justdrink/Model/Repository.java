@@ -3,10 +3,13 @@ package dk.au.mad21fall.appproject.justdrink.Model;
 import android.Manifest;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.GnssAntennaInfo;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -21,6 +24,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -36,6 +41,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import dk.au.mad21fall.appproject.justdrink.Model.PlacesAPILogic.PlaceAPIClass;
 import dk.au.mad21fall.appproject.justdrink.Model.PlacesAPILogic.PlaceProvider;
+import dk.au.mad21fall.appproject.justdrink.R;
+import dk.au.mad21fall.appproject.justdrink.Service.OfferMessage;
+import dk.au.mad21fall.appproject.justdrink.Service.PlaceOfferService;
 
 import static android.content.ContentValues.TAG;
 
@@ -51,6 +59,9 @@ public class Repository {
     private PlaceProvider placeProvider;
     private PlaceAPIClass placeAPI;
 
+    DatabaseReference myRef;
+
+    private Intent service;
 
     public static Repository getInstance(Context context) {
         if (ourInstance == null) {
@@ -107,14 +118,8 @@ public class Repository {
             }
         });
 
-
-        /*placeAPI.sendRequest(placeProvider.lastLocation.getLatitude(), placeProvider.lastLocation.getLongitude(), 1500, new Response.Listener<List<Location>>() {
-            @Override
-            public void onResponse(List<Location> response) {
-                int tal = 3;
-            }
-        });*/
-
+        service = new Intent(mContext, PlaceOfferService.class);
+        mContext.startService(service);
     }
 
     public LiveData<String> getUUID(Context context) {
@@ -142,7 +147,7 @@ public class Repository {
         return liveData;
     }
 
-    public void getDistanceFromPlace(double lat, double lng,Response.Listener<Float> listener) {
+    public void getDistanceFromPlace(double lat, double lng, Response.Listener<Float> listener) {
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -151,11 +156,146 @@ public class Repository {
             @Override
             public void onSuccess(android.location.Location location) {
                 float distance[] = new float[2];
-                android.location.Location.distanceBetween(location.getLatitude(),location.getLongitude(),lat,lng,distance);
-                listener.onResponse(distance[0]);
+                android.location.Location.distanceBetween(location.getLatitude(), location.getLongitude(), lat, lng, distance);
+                listener.onResponse(distance[0] / 1000);
 
             }
         });
+    }
+
+    private double metersToLatDegree(int meters) {
+        return ((double) meters / 111000);
+    }
+
+    public void getOffer(Response.Listener<OfferMessage> listener) {
+        DatabaseReference offerRef = FirebaseDatabase.getInstance().getReference("Offers");
+        DatabaseReference placeRef = FirebaseDatabase.getInstance().getReference("UserVisit/"+getUUID(mContext).getValue());
+
+        placeRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Iterable<DataSnapshot> snapshots = snapshot.getChildren();
+
+                while(snapshots.iterator().hasNext()) {
+                    String uid = snapshot.getKey();
+                    offerRef.child(uid).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()) {
+                                OfferMessage msg = snapshot.getValue(OfferMessage.class);
+                                listener.onResponse(msg);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void sendOffer(OfferMessage msg) {
+        DatabaseReference offerRef = FirebaseDatabase.getInstance().getReference("Offers");
+        DatabaseReference placeRef = FirebaseDatabase.getInstance().getReference("Places");
+
+        placeRef.orderByChild("name").equalTo(msg.owner).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    String uid = snapshot.getKey();
+                    offerRef.child(uid).setValue(msg);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    //Places around user within radius in meters
+    public void insertNearPlaces(int radius) {
+        DatabaseReference placeRef = FirebaseDatabase.getInstance().getReference("Places");
+
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("UserVisit/"+getUUID(mContext).getValue());
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Task<android.location.Location> loc = placeProvider.mfusedClient.getLastLocation();
+        loc.addOnSuccessListener(executor, new OnSuccessListener<android.location.Location>() {
+            @Override
+            public void onSuccess(android.location.Location location) {
+                //filter serverSide
+                placeRef.orderByChild("lat").startAt(location.getLatitude()-metersToLatDegree(radius)).endAt(location.getLatitude()+metersToLatDegree(radius)).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //ArrayList<Location> locations = new ArrayList<Location>();
+                        Iterable<DataSnapshot> snapshots = snapshot.getChildren();
+
+                        //filter clientSide
+                        while(snapshots.iterator().hasNext()) {
+                            Location loc = snapshots.iterator().next().getValue(Location.class);
+                            float distance[] = new float[2];
+                            android.location.Location.distanceBetween(location.getLatitude(),location.getLongitude(),loc.lat,loc.long1,distance);
+                            if(distance[0]<radius) {
+                                userRef.push().setValue(loc.name);
+                                //locations.add(loc);
+                            }
+                        }
+
+                        //add to nearby for User
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
+    }
+
+    MutableLiveData<ArrayList<Location>> livedata;
+    public MutableLiveData<ArrayList<Location>> getLocations() {
+        livedata = new MutableLiveData<ArrayList<Location>>();
+        executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                myRef = FirebaseDatabase.getInstance().getReference("Places");
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList<Location> locations = new ArrayList<Location>();
+
+                        Iterable<DataSnapshot> snapshots = snapshot.getChildren();
+                        while(snapshots.iterator().hasNext()) {
+                            Location loc = snapshots.iterator().next().getValue(Location.class);
+                            locations.add(loc);
+                        }
+                        livedata.setValue(locations);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
+        return livedata;
     }
     public void asd() {
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("");

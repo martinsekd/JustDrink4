@@ -14,11 +14,15 @@ import com.google.firebase.auth.FirebaseUser;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+
+import dk.au.mad21fall.appproject.justdrink.Model.Location;
 import dk.au.mad21fall.appproject.justdrink.Model.PlaceListLogic.ItemClick;
 import dk.au.mad21fall.appproject.justdrink.Model.Repository;
 import dk.au.mad21fall.appproject.justdrink.R;

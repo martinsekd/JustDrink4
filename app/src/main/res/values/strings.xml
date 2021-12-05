@@ -8,4 +8,6 @@
     <string name="tab_text_4">Liste</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="channelTitle">Offers from JustDrink places</string>
+    <string name="channelDescription">Get offers from recent visited places, when you are near</string>
 </resources>

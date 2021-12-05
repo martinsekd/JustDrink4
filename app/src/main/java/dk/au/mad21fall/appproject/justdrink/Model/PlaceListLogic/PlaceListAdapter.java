@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.android.volley.Response;
 import com.bumptech.glide.Glide;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter {
     }
 
     //assign new movies on list
-    public void setMovieList(List<Location> list) {
+    public void setPlaceList(List<Location> list) {
         _placeList = (ArrayList<Location>) list;
         notifyDataSetChanged();
     }
@@ -54,7 +55,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter {
         Repository.getInstance(_context).getDistanceFromPlace(_placeList.get(position).lat, _placeList.get(position).long1, new Response.Listener<Float>() {
             @Override
             public void onResponse(Float response) {
-                ((PlaceViewHolder)holder)._distanceKm.setText(String.valueOf(response)+" km væk");
+                ((PlaceViewHolder)holder)._distanceKm.setText(String.format("%.2f",response)+" km væk");
             }
         });
 
