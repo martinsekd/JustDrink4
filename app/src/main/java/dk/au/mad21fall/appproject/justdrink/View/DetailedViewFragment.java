@@ -48,7 +48,7 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
     private TextView Bar_Contacts;
     private TextView Bar_Adresse;
     private TextView Bar_Rating;
-
+    private TextView Bar_CheckIn;
 
 
 
@@ -70,6 +70,7 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
         Bar_Contacts = v.findViewById(R.id.Bar_Contacts);
         Bar_Adresse = v.findViewById(R.id.Bar_Adresse);
         Bar_Rating = v.findViewById(R.id.Bar_Rating);
+        Bar_CheckIn = v.findViewById(R.id.Bar_CheckIn);
 
 
 
@@ -81,6 +82,7 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
                 Bar_Contacts.setText(mLocation.phoneNumer + "");
                 Bar_Adresse.setText(mLocation.address);
                 Bar_Rating.setText(mLocation.rating+"");
+                Bar_CheckIn.setText(mLocation.drinkItems+"");
 
                 List<Day> openhours = mLocation.openhours;
 
@@ -133,6 +135,8 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
         mLocation.phoneNumer = Integer.parseInt(Numberstr);
         String Ratingstr = Bar_Rating.getText().toString();
         mLocation.rating = Double.parseDouble(Ratingstr);
+        String CheckInstr = Bar_CheckIn.getText().toString();
+        mLocation.numChekIns = Integer.parseInt(CheckInstr);
         List<Day> openhours = mLocation.openhours;
         //Switch case for business days
         int Day = 7;
