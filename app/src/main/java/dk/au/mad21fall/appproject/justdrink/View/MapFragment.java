@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,6 +41,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import org.w3c.dom.Text;
+
 import dk.au.mad21fall.appproject.justdrink.HelperClasses.JustDrinkViewModelFactory;
 import dk.au.mad21fall.appproject.justdrink.Model.Location;
 import dk.au.mad21fall.appproject.justdrink.R;
@@ -69,7 +75,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         }
         mMap.setMyLocationEnabled(true);
         // Add a marker in Sydney and move the camera
-        LatLng aarhus = new LatLng(56.17,10.2045);
+        LatLng aarhus = new LatLng(56.17, 10.2045);
         MarkerOptions a1 = new MarkerOptions().position(aarhus).title("Aarhus");
 
         mMap.addMarker(new MarkerOptions().position(aarhus).title("Marker in Aarhus"));
@@ -84,11 +90,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         ArrayList<String> listText = new ArrayList<String>();
                         Iterable<DataSnapshot> snapshots = snapshot.getChildren();
-                        while(snapshots.iterator().hasNext()) {
+                        while (snapshots.iterator().hasNext()) {
                             Location loc = snapshots.iterator().next().getValue(Location.class);
-                            MarkerOptions marker = new MarkerOptions().position(new LatLng(loc.lat,loc.long1)).title(loc.name);
+                            MarkerOptions marker = new MarkerOptions().position(new LatLng(loc.lat, loc.long1)).title(loc.name);
 
-                            marker.icon(bitmapDescriptorFromVector(getActivity(),R.drawable.ic_action_name));
+                            marker.icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_action_name));
                             mMap.addMarker(marker);
                         }
                     }
@@ -106,20 +112,52 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
             }
         });
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(aarhus,15.0f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(aarhus, 15.0f));
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(getContext(),"Du har trykket på "+marker.getTitle(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Du har trykket på " + marker.getTitle(), Toast.LENGTH_SHORT).show();
                 DetailedViewFragment detailed = new DetailedViewFragment(marker.getTitle());
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.view_pager,detailed);
+                transaction.replace(R.id.view_pager, detailed);
                 transaction.commit();
                 return false;
             }
         });
+
+        class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter{
+            private LayoutInflater inflater;
+            private Context context;
+
+            public MapInfoWindowAdapter(Context context){
+                inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+                this.context = context;}
+
+
+            @Override
+            public View getInfoWindow(Marker marker) {
+                View v = inflater.inflate(R.layout.detailed_view_fragment, null);
+                TextView Bar_name = (TextView) v.findViewById(R.id.Bar_Name);
+                Bar_name.setText(marker.getTitle());
+
+                TextView address = (TextView) v.findViewById(R.id.Bar_Adresse);
+                address.setText(marker.getSnippet());
+
+                ImageView Bar_image = (ImageView) v.findViewById(R.id.Image_Bar);
+                Bar_image.setImageResource(R.drawable.ic_baseline_local_bar_24);
+
+
+                return v;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                return null;
+            }
+        }
     }
+
 
     @Nullable
     @Override
