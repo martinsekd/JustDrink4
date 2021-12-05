@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class DetailedViewViewModel extends ViewModel {
 
     private FirebaseDatabase mDatabase;
     private FirebaseAuth mAuth;
+    private DatabaseReference mRef;
     public MutableLiveData<Location> mLocation;
 
     private Context mContext;
@@ -39,5 +41,6 @@ public class DetailedViewViewModel extends ViewModel {
     }
 
 
-
+    public void updateView(Location mLocation) {mRef.setValue(mLocation);
+    }
 }

@@ -1,5 +1,7 @@
 package dk.au.mad21fall.appproject.justdrink.View;
 
+//Include reference, Upload and Download is from https://firebase.google.com/docs/storage/android/start
+
 import android.net.Uri;
 import android.os.Bundle;
 

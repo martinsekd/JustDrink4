@@ -37,13 +37,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.model.Marker;
 
-public class DetailedViewFragment extends Fragment  {//implements OnMarkerClickListener
+public class DetailedViewFragment extends Fragment implements OnMarkerClickListener {
 
     //InfoWindow detailed view
     private DetailedViewViewModel vm;
     //Widgets
     private ImageView Image_Bar;
-    private String Bar_ID;
     private TextView Bar_name;
     private TextView Bar_OpenHours;
     private TextView Bar_Contacts;
@@ -73,19 +72,19 @@ public class DetailedViewFragment extends Fragment  {//implements OnMarkerClickL
         Bar_Rating = v.findViewById(R.id.Bar_Rating);
 
 
+
         //InfoWindow onChanged override.
         vm.mLocation.observe(getViewLifecycleOwner(), new Observer<Location>() {
             @Override
             public void onChanged(Location mLocation) {
-                Bar_ID.equals(mLocation.id);
                 Bar_name.setText(mLocation.name);
                 Bar_Contacts.setText(mLocation.phoneNumer + "");
                 Bar_Adresse.setText(mLocation.address);
-                Bar_Rating.setText(mLocation.rating + "");
+                Bar_Rating.setText(mLocation.rating+"");
 
                 List<Day> openhours = mLocation.openhours;
 
-                //Switch case
+                //Switch case for business days
                 int Day = 7;
                 switch (Day){
                   case 0:
@@ -116,9 +115,65 @@ public class DetailedViewFragment extends Fragment  {//implements OnMarkerClickL
                       Bar_OpenHours.setText("Sunday  16:00 - 05:00");
                       break;
 
-            }}
+            } }
         });
+
+
+
         return v; }
+
+
+    //SetOnMarkerClickListener
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Location mLocation = new Location();
+        mLocation.name = Bar_name.getText().toString();
+        mLocation.address = Bar_Adresse.getText().toString();
+        String Numberstr = Bar_Contacts.getText().toString();
+        mLocation.phoneNumer = Integer.parseInt(Numberstr);
+        String Ratingstr = Bar_Rating.getText().toString();
+        mLocation.rating = Double.parseDouble(Ratingstr);
+        List<Day> openhours = mLocation.openhours;
+        //Switch case for business days
+        int Day = 7;
+        switch (Day){
+            case 0:
+                Bar_OpenHours.setText("Monday    16:00 - 05:00");
+                break;
+
+            case 1:
+                Bar_OpenHours.setText("Tuesday   16:00 - 05:00");
+                break;
+
+            case 2:
+                Bar_OpenHours.setText("Wednesday   16:00 - 05:00");
+                break;
+
+            case 3:
+                Bar_OpenHours.setText("Thursday   16:00 - 05:00");
+                break;
+
+            case 4:
+                Bar_OpenHours.setText("Friday   16:00 - 05:00");
+                break;
+
+            case 5:
+                Bar_OpenHours.setText("Saturday   16:00 - 05:00");
+                break;
+
+            case 6:
+                Bar_OpenHours.setText("Sunday  16:00 - 05:00");
+                break;
+
+        }
+
+        vm.updateView(mLocation);
+
+        return false;
+    }
+
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -128,7 +183,8 @@ public class DetailedViewFragment extends Fragment  {//implements OnMarkerClickL
         // TODO: Use the ViewModel
 
 
-        }}
+    }
+}
 
     //@Override
     //public boolean onMarkerClick(Marker marker) {
