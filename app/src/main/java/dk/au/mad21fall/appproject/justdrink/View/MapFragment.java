@@ -142,7 +142,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
                 Bar_name.setText(marker.getTitle());
 
                 TextView address = (TextView) v.findViewById(R.id.Bar_Adresse);
-                address.setText(marker.getSnippet());
+                address.setText(marker.toString());
 
                 ImageView Bar_image = (ImageView) v.findViewById(R.id.Image_Bar);
                 Bar_image.setImageResource(R.drawable.ic_baseline_local_bar_24);
@@ -156,7 +156,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
                 return null;
             }
         }
+
     }
+
 
 
     @Nullable
