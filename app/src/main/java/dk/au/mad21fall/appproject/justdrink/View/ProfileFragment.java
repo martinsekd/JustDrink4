@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import dk.au.mad21fall.appproject.justdrink.HelperClasses.JustDrinkViewModelFactory;
 import dk.au.mad21fall.appproject.justdrink.Model.ProfileSettings;
 import dk.au.mad21fall.appproject.justdrink.R;
 import dk.au.mad21fall.appproject.justdrink.ViewModel.ProfileViewModel;
@@ -41,14 +42,14 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        mViewModel = new JustDrinkViewModelFactory(getContext()).create(ProfileViewModel.class);
         View v = inflater.inflate(R.layout.profile_fragment, container, false);
         firstName = v.findViewById(R.id.firstName);
         age = v.findViewById(R.id.age);
         gender = v.findViewById(R.id.gender);
         updateBtn = v.findViewById(R.id.updateBtn);
 
-        mViewModel.mProfile.observe(getViewLifecycleOwner(), new Observer<ProfileSettings>() {
+        mViewModel.getSettings().observe(getViewLifecycleOwner(), new Observer<ProfileSettings>() {
             @Override
             public void onChanged(ProfileSettings profileSettings) {
                 firstName.setText(profileSettings.firstName);

@@ -9,6 +9,7 @@ import dk.au.mad21fall.appproject.justdrink.ViewModel.ChatFragmentViewModel;
 import dk.au.mad21fall.appproject.justdrink.ViewModel.DetailedViewViewModel;
 import dk.au.mad21fall.appproject.justdrink.ViewModel.ListViewFragmentViewModel;
 import dk.au.mad21fall.appproject.justdrink.ViewModel.MapFragmentViewModel;
+import dk.au.mad21fall.appproject.justdrink.ViewModel.ProfileViewModel;
 
 //inspired by Procedure in answer:
 //https://stackoverflow.com/questions/46283981/android-viewmodel-additional-arguments
@@ -31,6 +32,8 @@ public class JustDrinkViewModelFactory implements ViewModelProvider.Factory {
             return (T) new DetailedViewViewModel(mContext);
         } else if (MapFragmentViewModel.class.equals(modelClass)) {
             return (T) new MapFragmentViewModel(mContext);
+        } else if (ProfileViewModel.class.equals(modelClass)) {
+            return (T) new ProfileViewModel(mContext);
         }
         return (T) new MapFragmentViewModel(mContext);
 

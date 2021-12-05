@@ -40,6 +40,9 @@ public class DetailedViewViewModel extends ViewModel {
 
     }
 
+    public MutableLiveData<Location> getLocationFromName(String barName) {
+        return Repository.getInstance(mContext).getLocation(barName);
+    }
 
     public void updateView(Location mLocation) {mRef.setValue(mLocation);
     }

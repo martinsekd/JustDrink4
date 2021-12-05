@@ -31,11 +31,10 @@ public class PlaceOfferService extends Service {
     //execute something in another thread
     private ScheduledExecutorService executorService;
 
-
-
     //counter to make unique notification id's
     private int notificationCounter = 0;
 
+    //to make notifications
     NotificationManagerCompat notificationManager;
 
     //define number of seconds between 2 notifications

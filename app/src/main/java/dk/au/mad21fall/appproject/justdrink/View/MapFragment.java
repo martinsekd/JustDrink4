@@ -112,6 +112,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             @Override
             public boolean onMarkerClick(Marker marker) {
                 Toast.makeText(getContext(),"Du har trykket på "+marker.getTitle(),Toast.LENGTH_SHORT).show();
+                DetailedViewFragment detailed = new DetailedViewFragment(marker.getTitle());
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.view_pager,detailed);
+                transaction.commit();
                 return false;
             }
         });

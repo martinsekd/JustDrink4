@@ -36,9 +36,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import dk.au.mad21fall.appproject.justdrink.Model.PlacesAPILogic.PlaceAPIClass;
 import dk.au.mad21fall.appproject.justdrink.Model.PlacesAPILogic.PlaceProvider;
 import dk.au.mad21fall.appproject.justdrink.R;
@@ -169,38 +171,71 @@ public class Repository {
 
     public void getOffer(Response.Listener<OfferMessage> listener) {
         DatabaseReference offerRef = FirebaseDatabase.getInstance().getReference("Offers");
-        DatabaseReference placeRef = FirebaseDatabase.getInstance().getReference("UserVisit/"+getUUID(mContext).getValue());
-
-        placeRef.addValueEventListener(new ValueEventListener() {
+        getUUID(mContext).observe((AppCompatActivity) mContext, new Observer<String>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Iterable<DataSnapshot> snapshots = snapshot.getChildren();
+            public void onChanged(String s) {
+                DatabaseReference visitPlaceRef = FirebaseDatabase.getInstance().getReference("UserVisit/" + s);
+                visitPlaceRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Iterable<DataSnapshot> snapshots = snapshot.getChildren();
 
-                while(snapshots.iterator().hasNext()) {
-                    String uid = snapshot.getKey();
-                    offerRef.child(uid).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()) {
-                                OfferMessage msg = snapshot.getValue(OfferMessage.class);
-                                listener.onResponse(msg);
-                            }
+                        while (snapshots.iterator().hasNext()) {
+                            String uid = snapshot.getKey();
+                            offerRef.child(uid).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot ofSnapshot) {
+                                    if (ofSnapshot.exists()) {
+
+                                        float[] distance = new float[2];
+                                        FirebaseDatabase.getInstance().getReference("Places/" + uid).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot placeSnapshot) {
+                                                Location loc = placeSnapshot.getValue(Location.class);
+                                                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                                    return;
+                                                }
+                                                Task<android.location.Location> userLoc = placeProvider.mfusedClient.getLastLocation();
+                                                userLoc.addOnSuccessListener(executor, new OnSuccessListener<android.location.Location>() {
+                                                    @Override
+                                                    public void onSuccess(android.location.Location location) {
+                                                        android.location.Location.distanceBetween(loc.lat,loc.long1,location.getLatitude(),location.getLongitude(),distance);
+                                                        if(distance[0]<20) {
+                                                            OfferMessage msg = ofSnapshot.getValue(OfferMessage.class);
+                                                            listener.onResponse(msg);
+                                                        }
+                                                    }
+                                                });
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                    }
 
-                        }
-                    });
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+                    }
+                });
             }
         });
+
     }
 
     public void sendOffer(OfferMessage msg) {
@@ -296,6 +331,70 @@ public class Repository {
         });
 
         return livedata;
+    }
+
+    MutableLiveData<ProfileSettings> profileLiveData = new MutableLiveData<ProfileSettings>();
+
+    public void updateSettings(ProfileSettings settings) {
+        getUUID(mContext).observe((AppCompatActivity) mContext, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Users/" + s);
+                myRef.setValue(settings);
+            }
+        });
+    }
+    public MutableLiveData<ProfileSettings> getProfileSettings() {
+        getUUID(mContext).observe((AppCompatActivity)mContext, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Users/"+s);
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()) {
+                            mProfile = snapshot.getValue(ProfileSettings.class);
+                        } else {
+                            ProfileSettings profile1 = new ProfileSettings();
+                            profile1.firstName = "User1";
+                            profile1.age = 0;
+                            profile1.gender = Gender.OTHER;
+                            myRef.setValue(profile1);
+                            mProfile = profile1;
+                        }
+                        profileLiveData.setValue(mProfile);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
+        return profileLiveData;
+    }
+
+    private MutableLiveData<Location> locationByNameLiveData = new MutableLiveData<Location>();
+    public MutableLiveData<Location> getLocation(String barName) {
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Places");
+        myRef.orderByChild("name").equalTo(barName).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    Location bar = snapshot.getChildren().iterator().next().getValue(Location.class);
+                    locationByNameLiveData.setValue(bar);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return locationByNameLiveData;
     }
     public void asd() {
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("");

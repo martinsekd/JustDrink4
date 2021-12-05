@@ -49,12 +49,19 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
     private TextView Bar_Adresse;
     private TextView Bar_Rating;
 
+    private String nameOfPlace;
 
 
 
 
     public static DetailedViewFragment newInstance() {
         return new DetailedViewFragment();
+    }
+
+    public DetailedViewFragment() {}
+
+    public DetailedViewFragment(String name) {
+        nameOfPlace = name;
     }
 
     //Set widgets
@@ -74,7 +81,7 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
 
 
         //InfoWindow onChanged override.
-        vm.mLocation.observe(getViewLifecycleOwner(), new Observer<Location>() {
+        vm.getLocationFromName(nameOfPlace).observe(getViewLifecycleOwner(), new Observer<Location>() {
             @Override
             public void onChanged(Location mLocation) {
                 Bar_name.setText(mLocation.name);
