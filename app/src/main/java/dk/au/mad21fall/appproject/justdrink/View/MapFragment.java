@@ -156,7 +156,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
                 return null;
             }
         }
+mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+    @Override
+    public void onInfoWindowClick(Marker marker) {
 
+    }
+});
     }
 
 
