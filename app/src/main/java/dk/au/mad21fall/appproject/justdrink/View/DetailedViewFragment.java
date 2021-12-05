@@ -29,6 +29,7 @@ import java.util.List;
 
 import dk.au.mad21fall.appproject.justdrink.HelperClasses.JustDrinkViewModelFactory;
 import dk.au.mad21fall.appproject.justdrink.Model.Day;
+import dk.au.mad21fall.appproject.justdrink.Model.DrinkItems;
 import dk.au.mad21fall.appproject.justdrink.Model.Location;
 import dk.au.mad21fall.appproject.justdrink.R;
 import dk.au.mad21fall.appproject.justdrink.ViewModel.DetailedViewViewModel;
@@ -36,11 +37,15 @@ import dk.au.mad21fall.appproject.justdrink.ViewModel.DetailedViewViewModel;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.model.Marker;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 public class DetailedViewFragment extends Fragment implements OnMarkerClickListener {
 
     //InfoWindow detailed view
     private DetailedViewViewModel vm;
+    private FirebaseStorage Storage;
+    private FirebaseDatabase database;
     //Widgets
     private ImageView Image_Bar;
     private TextView Bar_name;
@@ -83,11 +88,31 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
                 Bar_Adresse.setText(mLocation.address);
                 Bar_Rating.setText(mLocation.rating+"");
                 Bar_CheckIn.setText(mLocation.drinkItems+"");
+                Bar_OpenHours.setText(mLocation.openhours+"");
 
                 List<Day> openhours = mLocation.openhours;
+                openhours.add(new Day(18,02)); //Monday
+                openhours.add(new Day(18,02)); //Tuesday
+                openhours.add(new Day(18,02)); //Wednesday
+                openhours.add(new Day(18,02)); //Thursday
+                openhours.add(new Day(18,05)); //Friday
+                openhours.add(new Day(18,05)); //Saturday
+                openhours.add(new Day(00,00)); //Sunday
+
+                /*List<DrinkItems> drinks = mLocation.drinkItems;
+                DrinkItems ol = new DrinkItems();
+                ol.name = "Øl";
+                ol.description = "Lavet på byg";
+                ol.image = "";
+                ol.price = 19.95;
+                drinks.add(ol);*/
+
+
+
+
 
                 //Switch case for business days
-                int Day = 7;
+               /*int Day = 7;
                 switch (Day){
                   case 0:
                       Bar_OpenHours.setText("Monday    16:00 - 05:00");
@@ -117,12 +142,13 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
                       Bar_OpenHours.setText("Sunday  16:00 - 05:00");
                       break;
 
-            } }
+            }*/ }
         });
 
 
 
         return v; }
+
 
 
     //SetOnMarkerClickListener
@@ -131,15 +157,37 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
         Location mLocation = new Location();
         mLocation.name = Bar_name.getText().toString();
         mLocation.address = Bar_Adresse.getText().toString();
+
         String Numberstr = Bar_Contacts.getText().toString();
         mLocation.phoneNumer = Integer.parseInt(Numberstr);
+
         String Ratingstr = Bar_Rating.getText().toString();
         mLocation.rating = Double.parseDouble(Ratingstr);
+
         String CheckInstr = Bar_CheckIn.getText().toString();
         mLocation.numChekIns = Integer.parseInt(CheckInstr);
+
         List<Day> openhours = mLocation.openhours;
+        openhours.add(new Day(18,02)); //Monday
+        openhours.add(new Day(18,02)); //Tuesday
+        openhours.add(new Day(18,02)); //Wednesday
+        openhours.add(new Day(18,02)); //Thursday
+        openhours.add(new Day(18,05)); //Friday
+        openhours.add(new Day(18,05)); //Saturday
+        openhours.add(new Day(00,00)); //Sunday
+
+        //DrinkItems
+       /* DrinkItems ol = new DrinkItems();
+        ol.name = "Øl";
+        ol.description = "Lavet på byg";
+        ol.image = "";
+        ol.price = 19.95;
+        drinks.add(ol);*/
+
+
+
         //Switch case for business days
-        int Day = 7;
+       /* int Day = 7;
         switch (Day){
             case 0:
                 Bar_OpenHours.setText("Monday    16:00 - 05:00");
@@ -169,7 +217,7 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
                 Bar_OpenHours.setText("Sunday  16:00 - 05:00");
                 break;
 
-        }
+        }*/
 
         vm.updateView(mLocation);
 
@@ -190,30 +238,4 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
     }
 }
 
-    //@Override
-    //public boolean onMarkerClick(Marker marker) {
-      //  if (marker.equals(mAarhus)) {
-    //      //Causes the marker to jump into position when clicked
-    //      final Handler handler = new Handler();
-    //      final long start = SystemClock.uptimeMillis();
-    //      final long duration = 1500;
-//
-    //          final Interpolator interpolator = new BounceInterpolator();
-    //      handler.post(new Runnable() {
-    //          @Override
-    //          public void run() {
-    //              long elapsed = SystemClock.uptimeMillis() - start;
-    //              float t = Math.max(
-    //                      1 - interpolator.getInterpolation((float) elapsed / duration), 0);
-    //              marker.setAnchor(0.5f, 1.0f + 2 * t);
-//
-    //                  if (t > 0.0) {
-    //                  // Post again 16ms later.
-    //                  handler.postDelayed(this, 16);
-    //              }
-    //          }
-    //      });
-    //  }
 
-    //  return false;
-    //}
