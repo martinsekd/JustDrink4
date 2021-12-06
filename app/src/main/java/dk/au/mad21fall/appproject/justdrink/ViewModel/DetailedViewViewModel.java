@@ -22,9 +22,6 @@ import dk.au.mad21fall.appproject.justdrink.View.StorageActivity;
 public class DetailedViewViewModel extends ViewModel {
     // TODO: Implement the ViewModel
 
-    private FirebaseDatabase mDatabase;
-    private FirebaseAuth mAuth;
-    private DatabaseReference mRef;
     public MutableLiveData<Location> mLocation;
 
     private Context mContext;
@@ -33,9 +30,7 @@ public class DetailedViewViewModel extends ViewModel {
 
     public DetailedViewViewModel(Context context) {
         mContext = context;
-        mDatabase = FirebaseDatabase.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-        mLocation = new MutableLiveData<Location>();
+
 
 
     }
@@ -44,6 +39,6 @@ public class DetailedViewViewModel extends ViewModel {
         return Repository.getInstance(mContext).getLocation(barName);
     }
 
-    public void updateView(Location mLocation) {mRef.setValue(mLocation);
-    }
+
+
 }

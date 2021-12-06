@@ -73,11 +73,11 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
         //mDetailedView = new ViewModelProvider(this).get(DetailedViewViewModel.class);
         View v = inflater.inflate(R.layout.detailed_view_fragment, container, false);
         Image_Bar = v.findViewById(R.id.Image_Bar);
-        Bar_name = v.findViewById(R.id.Bar_Name);
+        Bar_name = v.findViewById(R.id.title);
         Bar_OpenHours = v.findViewById(R.id.Bar_OpenHours);
         Bar_Contacts = v.findViewById(R.id.Bar_Contacts);
         Bar_Adresse = v.findViewById(R.id.Bar_Adresse);
-        Bar_Rating = v.findViewById(R.id.Bar_Rating);
+        Bar_Rating = v.findViewById(R.id.Snippet);
 
 
 
@@ -134,6 +134,7 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
     //SetOnMarkerClickListener
     @Override
     public boolean onMarkerClick(Marker marker) {
+
         Location mLocation = new Location();
         mLocation.name = Bar_name.getText().toString();
         mLocation.address = Bar_Adresse.getText().toString();
@@ -175,7 +176,7 @@ public class DetailedViewFragment extends Fragment implements OnMarkerClickListe
 
         }
 
-        vm.updateView(mLocation);
+
 
         return false;
     }
