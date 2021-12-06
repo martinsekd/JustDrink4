@@ -26,16 +26,7 @@ public class DetailedViewViewModel extends ViewModel {
 
     private Context mContext;
 
-
-
-    public DetailedViewViewModel(Context context) {
-        mContext = context;
-
-
-
-
-
-    }
+    public DetailedViewViewModel(Context context) { mContext = context; }
 
     public MutableLiveData<Location> getLocationFromName(String barName) {
         return Repository.getInstance(mContext).getLocation(barName);

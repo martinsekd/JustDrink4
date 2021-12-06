@@ -1,36 +1,19 @@
 package dk.au.mad21fall.appproject.justdrink.View;
 
-import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
+import android.app.ActionBar;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
-import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.BaseInterpolator;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.Interpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 
 import dk.au.mad21fall.appproject.justdrink.HelperClasses.JustDrinkViewModelFactory;
@@ -39,134 +22,140 @@ import dk.au.mad21fall.appproject.justdrink.Model.Location;
 import dk.au.mad21fall.appproject.justdrink.R;
 import dk.au.mad21fall.appproject.justdrink.ViewModel.DetailedViewViewModel;
 
-import com.android.volley.Request;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class DetailedViewFragment extends Fragment implements OnMapReadyCallback {
+public class DetailedViewFragment extends Fragment implements OnMapReadyCallback, OnMarkerClickListener {
 
+    private static ActionBar marker;
     //InfoWindow detailed view
+    private FirebaseDatabase database;
+    private FirebaseAuth mAuth;
     private DetailedViewViewModel vm;
+    private GoogleMap mMap;
+    private Context context;
     //Widgets
     private ImageView Image_Bar;
-    private TextView Bar_name;
+    private TextView Bar_Name;
     private TextView Bar_OpenHours;
     private TextView Bar_Contacts;
     private TextView Bar_Adresse;
     private TextView Bar_Rating;
-    private GoogleMap mMap;
-    private MapView mV;
-    private FrameLayout fragment;
-    private String nameOfPlace;
-    Object markerMap;
 
 
 
 
-    public DetailedViewFragment(String barName) {
-        nameOfPlace = barName;
-    }
 
-    public DetailedViewFragment() {
+
+
+    public DetailedViewFragment(String title) {
+        title.equals(Bar_Name);
+
 
     }
-
     public static DetailedViewFragment newInstance() {
-        return new DetailedViewFragment();
+        return new DetailedViewFragment((String) marker.getTitle());
     }
+
 
 
     //Set widgets
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.detailed_view_fragment, container, false);
+
         vm = new JustDrinkViewModelFactory(getContext()).create(DetailedViewViewModel.class);
-        //mDetailedView = new ViewModelProvider(this).get(DetailedViewViewModel.class);
         View v = inflater.inflate(R.layout.detailed_view_fragment, container, false);
 
-        Image_Bar = v.findViewById(R.id.Image_Bar);
-        Bar_name = v.findViewById(R.id.Bar_Name);
-        Bar_OpenHours = v.findViewById(R.id.Bar_OpenHours);
-        Bar_Contacts = v.findViewById(R.id.Bar_Contacts);
-        Bar_Adresse = v.findViewById(R.id.Bar_Adresse);
-        Bar_Rating = v.findViewById(R.id.Bar_rating);
+        //Get reference to UI widgets
+        Image_Bar = (ImageView) v.findViewById(R.id.Image_Bar);
+        Bar_Name = (TextView) v.findViewById(R.id.Bar_Name);
+        Bar_OpenHours = (TextView) v.findViewById(R.id.Bar_OpenHours);
+        Bar_Contacts = (TextView) v.findViewById(R.id.Bar_Contacts);
+        Bar_Adresse = (TextView) v.findViewById(R.id.Bar_Adresse);
+        Bar_Rating = (TextView) v.findViewById(R.id.Bar_rating);
 
-        return v;
-
+        //In fragment setContentView is used as return onCreateView
+        return inflater.inflate(R.layout.detailed_view_fragment, container, false);
 
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        
 
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        mMap.setOnMarkerClickListener(new OnMarkerClickListener() {
             @Override
-            public void onMapClick(LatLng latLng) {
-                float pX = (float) latLng.latitude;
-                float pY = (float) latLng.longitude;
-
-                mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(pX, pY))
-                .title("" + Bar_name)).showInfoWindow();
+            public boolean onMarkerClick(Marker marker) {
+                return false;
             }
         });
 
+/*
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+*/
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+
+
 
             @Override
             public View getInfoWindow(Marker marker) {
-                View v = LayoutInflater.from(getContext()).inflate(R.layout.detailed_view_fragment,null);
-                TextView title = v.findViewById(R.id.Bar_Name);
-                TextView snippet = v.findViewById(R.id.Bar_Adresse);
-                TextView title1 = v.findViewById(R.id.Bar_Contacts);
-                TextView title2 = v.findViewById(R.id.Bar_OpenHours);
-                ImageView img = v.findViewById(R.id.Image_Bar);
-                title.setText(marker.getTitle());
-                snippet.setText(marker.getSnippet());
-                title1.setText(marker.getTitle());
-                title2.setText(marker.getTitle());
-                img.setImageResource(R.drawable.ic_baseline_local_bar_24);
-
-                return v;
+                return null;
             }
 
             @Override
             public View getInfoContents(Marker marker) {
+                View v = LayoutInflater.from(getContext()).inflate(R.layout.detailed_view_fragment,null);
 
-                return null;
+                //Setting up infoWindow
+                TextView Bar_Name = v.findViewById(R.id.Bar_Name);
+                TextView Bar_adresse = v.findViewById(R.id.Bar_Adresse);
+                TextView Bar_Contacts = v.findViewById(R.id.Bar_Contacts);
+                TextView Bar_openhours = v.findViewById(R.id.Bar_OpenHours);
+                TextView Bar_rating = v.findViewById(R.id.Bar_rating);
+                ImageView img = v.findViewById(R.id.Image_Bar);
+                Bar_Name.setText(marker.getTitle());
+                Bar_adresse.setText(marker.getSnippet());
+
+
+                //Set text for InfoWindow
+                Location location = (Location) marker.getTag();
+                Bar_rating.setText(location.getRating().toString());
+                Bar_Contacts.setText(location.getPhoneNumber());
+                Bar_openhours.setText(location.openhours +"");
+                img.setImageResource(R.drawable.ic_baseline_local_bar_24);
+
+
+                return v;
             }
         });
-
-
-
-
     }
 
 
 
 
 
-/*
+
 
     //SetOnMarkerClickListener
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        Location mLocation = new Location();
-        mLocation.name = Bar_name.getText().toString();
-        mLocation.address = Bar_Adresse.getText().toString();
+        Location location = new Location();
+        location.name = Bar_Name.getText().toString();
+        location.address = Bar_Adresse.getText().toString();
         String Numberstr = Bar_Contacts.getText().toString();
-        mLocation.phoneNumer = Integer.parseInt(Numberstr);
+        location.phoneNumber = Integer.parseInt(Numberstr);
         String Ratingstr = Bar_Rating.getText().toString();
-        mLocation.rating = Double.parseDouble(Ratingstr);
-        List<Day> openhours = mLocation.openhours;
+        location.rating = Double.parseDouble(Ratingstr);
+        List<Day> openhours = location.openhours;
         //Switch case for business days
         int Day = 7;
         switch (Day){
@@ -200,10 +189,8 @@ public class DetailedViewFragment extends Fragment implements OnMapReadyCallback
 
         }
 
-
-
         return false;
-    }*/
+    }
 
 
 
