@@ -1,6 +1,9 @@
 package dk.au.mad21fall.appproject.justdrink.View;
 
+
+
 import android.Manifest;
+
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,10 +15,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,6 +39,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +51,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.room.vo.Field;
+import java.util.Arrays;
 
 import org.w3c.dom.Text;
 
@@ -56,6 +65,7 @@ import dk.au.mad21fall.appproject.justdrink.databinding.ActivityMapsBinding;
 public class MapFragment extends Fragment implements OnMapReadyCallback{
 
 
+
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
     private FirebaseDatabase database;
@@ -63,6 +73,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     private FirebaseUser user;
     private View view;
     private MapFragmentViewModel vm;
+    private boolean locationPermissionGranted;
     Context context;
 
 
@@ -83,21 +94,35 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             // Add a marker in Sydney and move the camera
 
             //Info window adaptor
-            mMap.setInfoWindowAdapter(new DetailedFragmentAdapter(MapFragment.this));
+            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+                    View view = getLayoutInflater().inflate(R.layout.detailed_view_fragment,null);
+                    TextView title = view.findViewById(R.id.title);
+                    title.setText(marker.getTitle());
+
+                    TextView snippet = view.findViewById(R.id.Snippet);
+                    snippet.setText(marker.getSnippet());
+                    return null;
+                }
+            });
 
             //Info window listener
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
-                    Toast.makeText(context, "Clicked Info window", Toast.LENGTH_SHORT).show();
+
                 }
             });
 
            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                @Override
                public boolean onMarkerClick(Marker marker) {
-                   marker.showInfoWindow();
-                   Toast.makeText(context, marker.getTitle(), Toast.LENGTH_SHORT).show();
                    return false;
                }
            });
@@ -186,6 +211,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -219,6 +245,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
         myRef.setValue(loc);*/
     }
+
+
+
+
+
 
     @Override
     public void onPause() {
