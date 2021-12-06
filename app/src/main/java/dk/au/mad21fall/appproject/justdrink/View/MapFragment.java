@@ -93,32 +93,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             // for ActivityCompat#requestPermissions for more details.
             // Add a marker in Sydney and move the camera
 
-            //Info window adaptor
-            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                @Override
-                public View getInfoWindow(Marker marker) {
-                    return null;
-                }
 
-                @Override
-                public View getInfoContents(Marker marker) {
-                    View view = getLayoutInflater().inflate(R.layout.detailed_view_fragment,null);
-                    TextView title = view.findViewById(R.id.title);
-                    title.setText(marker.getTitle());
 
-                    TextView snippet = view.findViewById(R.id.Snippet);
-                    snippet.setText(marker.getSnippet());
-                    return null;
-                }
-            });
-
-            //Info window listener
-            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                @Override
-                public void onInfoWindowClick(Marker marker) {
-
-                }
-            });
 
            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                @Override
