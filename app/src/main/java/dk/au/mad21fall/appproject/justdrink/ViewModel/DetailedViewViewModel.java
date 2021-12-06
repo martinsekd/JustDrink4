@@ -33,6 +33,8 @@ public class DetailedViewViewModel extends ViewModel {
 
 
 
+
+
     }
 
     public MutableLiveData<Location> getLocationFromName(String barName) {
